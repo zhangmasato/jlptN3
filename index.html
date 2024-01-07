@@ -9,27 +9,29 @@
 <body>
 
 <div id="audioList"></div>
+<div id="japaneseText"></div>
 
 <script>
 const audioFiles = [
-  "入口の前には 車をとめないでください。.mp3",
-  "わたしは テニスのルールを よく しりま.mp3",
-  "もっと ていねいに かいてください。.mp3"
+  { name: "入口の前には 車をとめないでください。.mp3", translation: "请不要在入口停车。", japanese: "入り口の前で車を止めないでください。" },
+  { name: "わたしは テニスのルールを よく しりま.mp3", translation: "我熟悉网球的规则。", japanese: "私はテニスのルールをよく知ります。" },
+  { name: "もっと ていねいに かいてください。.mp3", translation: "请更加仔细地写。", japanese: "もっと丁寧に書いてください。" }
 ];
 
-function playAudio(audioFile) {
-  const audioPlayer = new Audio(audioFile);
+function playAudio(index) {
+  const audioPlayer = new Audio(audioFiles[index].name);
   audioPlayer.play();
+  document.getElementById('japaneseText').textContent = audioFiles[index].japanese;
 }
 
 function createAudioButtons() {
   const audioList = document.getElementById('audioList');
 
-  audioFiles.forEach(file => {
+  audioFiles.forEach((file, index) => {
     const button = document.createElement('button');
-    button.textContent = file.replace(".mp3", "");
+    button.textContent = file.translation;
     button.onclick = function() {
-      playAudio(file);
+      playAudio(index);
     };
 
     audioList.appendChild(button);
