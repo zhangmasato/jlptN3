@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>日语练习</title>
+</head>
+<body>
+
+<div id="audioList"></div>
+
+<script>
+const audioFiles = [
+  "入口の前には 車をとめないでください。.mp3",
+  "わたしは テニスのルールを よく しりま.mp3",
+  "もっと ていねいに かいてください。.mp3"
+];
+
+function playAudio(audioFile) {
+  const audioPlayer = new Audio(audioFile);
+  audioPlayer.play();
+}
+
+function createAudioButtons() {
+  const audioList = document.getElementById('audioList');
+
+  audioFiles.forEach(file => {
+    const button = document.createElement('button');
+    button.textContent = file.replace(".mp3", "");
+    button.onclick = function() {
+      playAudio(file);
+    };
+
+    audioList.appendChild(button);
+  });
+}
+
+createAudioButtons();
+</script>
+
+</body>
+</html>
