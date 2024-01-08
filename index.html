@@ -27,11 +27,12 @@ async function createAudioButtons() {
   try {
     const response = await fetch('https://zhangmasato.github.io/jlptN3/MP3');
     const files = await response.json();
+
     files.forEach(filename => {
       const button = document.createElement('button');
       button.textContent = filename.replace(".mp3", ""); // 初始文本不包含 ".mp3"
       button.onclick = function() {
-        playAudio(filename);
+        playAudio(`https://zhangmasato.github.io/jlptN3/MP3/${filename}`);
       };
 
       audioList.appendChild(button);
