@@ -12,39 +12,42 @@
 <div id="japaneseText"></div>
 
 <script>
-async function fetchAudioFiles() {
-  try {
-    const response = await fetch('MP3/');
-    const files = await response.json();
-    return files;
-  } catch (error) {
-    console.error('获取文件列表失败', error);
-    return [];
-  }
-}
+// 异步获取 JSON 数据
+fetch('https://zhangmasato.github.io/jlptN3/file_list.json')
+  .then(response => response.json())
+  .then(data => {
+    // 处理 JSON 数据
+    const audioFiles = data.map(item => {
+      return {
+        name: `${item.name}`,
+        translation: item.translation
+      };
+    });
 
-async function playAudio(filename) {
-  const audioPlayer = new Audio(filename);
-  audioPlayer.play();
-  document.getElementById('japaneseText').textContent = filename;
-}
+    function playAudio(index) {
+      const audioPlayer = new Audio(audioFiles[index].name);
+      audioPlayer.play();
+      document.getElementById('japaneseText').textContent = audioFiles[index].name;
+    }
 
-async function createAudioButtons() {
-  const audioList = document.getElementById('audioList');
-  const audioFiles = await fetchAudioFiles();
+    function createAudioButtons() {
+      const audioList = document.getElementById('audioList');
 
-  audioFiles.forEach((filename, index) => {
-    const button = document.createElement('button');
-    button.textContent = `音频 ${index + 1}`;
-    button.onclick = function() {
-      playAudio(`MP3/${filename}`);
-    };
+      audioFiles.forEach((file, index) => {
+        const button = document.createElement('button');
+        button.textContent = file.translation;
+        button.onclick = function() {
+          playAudio(index);
+        };
 
-    audioList.appendChild(button);
-  });
-}
+        audioList.appendChild(button);
+      });
+    }
 
-createAudioButtons();
+    createAudioButtons();
+  })
+  .catch(error => console.error('Error fetching JSON:', error));
+
 </script>
 
 </body>
