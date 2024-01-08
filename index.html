@@ -12,30 +12,34 @@
 <div id="japaneseText"></div>
 
 <script>
-const audioFiles = [
-  { name: "入口の前には車をとめないでください。.mp3", translation: "请不要在入口停车。"},
-  { name: "わたしはテニスのルールを よく しりま.mp3", translation: "我熟悉网球的规则。"},
-  { name: "もっとていねいに かいてください。.mp3", translation: "请更加仔细地写。"}
-];
-
-function playAudio(index) {
-  const audioPlayer = new Audio(audioFiles[index].name);
+function playAudio(filename) {
+  const audioPlayer = new Audio(filename);
   audioPlayer.play();
-  document.getElementById('japaneseText').textContent = audioFiles[index].name;
+
+  // 去掉 ".mp3" 部分显示日语文本
+  const japaneseText = filename.replace(".mp3", "");
+  document.getElementById('japaneseText').textContent = japaneseText;
 }
 
-function createAudioButtons() {
+async function createAudioButtons() {
   const audioList = document.getElementById('audioList');
 
-  audioFiles.forEach((file, index) => {
-    const button = document.createElement('button');
-    button.textContent = file.translation;
-    button.onclick = function() {
-      playAudio(index);
-    };
+  try {
+    const response = await fetch('https://your-username.github.io/your-repository/MP3'); // 替换为你的 GitHub Pages 链接
+    const files = await response.json();
 
-    audioList.appendChild(button);
-  });
+    files.forEach(filename => {
+      const button = document.createElement('button');
+      button.textContent = filename.replace(".mp3", ""); // 初始文本不包含 ".mp3"
+      button.onclick = function() {
+        playAudio(filename);
+      };
+
+      audioList.appendChild(button);
+    });
+  } catch (error) {
+    console.error('获取文件列表失败', error);
+  }
 }
 
 createAudioButtons();
