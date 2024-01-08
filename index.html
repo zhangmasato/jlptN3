@@ -12,34 +12,30 @@
 <div id="japaneseText"></div>
 
 <script>
-function playAudio(filename) {
-  const audioPlayer = new Audio(filename);
-  audioPlayer.play();
+const audioFiles = [
+  { name: "MP3/入口の前には車をとめないでください。.mp3", translation: "请不要在入口停车。"},
+  { name: "MP3/わたしはテニスのルールをよくしりません.mp3", translation: "我熟悉网球的规则。"},
+  { name: "MP3/もっとていねいにかいてください。.mp3", translation: "请更加仔细地写。"}
+];
 
-  // 去掉 ".mp3" 部分显示日语文本
-  const japaneseText = filename.replace(".mp3", "");
-  document.getElementById('japaneseText').textContent = japaneseText;
+function playAudio(index) {
+  const audioPlayer = new Audio(audioFiles[index].name);
+  audioPlayer.play();
+  document.getElementById('japaneseText').textContent = audioFiles[index].name;
 }
 
-async function createAudioButtons() {
+function createAudioButtons() {
   const audioList = document.getElementById('audioList');
 
-  try {
-    const response = await fetch('https://zhangmasato.github.io/jlptN3/MP3');
-    const files = await response.json();
+  audioFiles.forEach((file, index) => {
+    const button = document.createElement('button');
+    button.textContent = file.translation;
+    button.onclick = function() {
+      playAudio(index);
+    };
 
-    files.forEach(filename => {
-      const button = document.createElement('button');
-      button.textContent = filename.replace(".mp3", ""); // 初始文本不包含 ".mp3"
-      button.onclick = function() {
-        playAudio(`https://zhangmasato.github.io/jlptN3/MP3/${filename}`);
-      };
-
-      audioList.appendChild(button);
-    });
-  } catch (error) {
-    console.error('获取文件列表失败', error);
-  }
+    audioList.appendChild(button);
+  });
 }
 
 createAudioButtons();
