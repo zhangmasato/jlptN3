@@ -12,26 +12,32 @@
 <div id="japaneseText"></div>
 
 <script>
-const audioFiles = [
-  { name: "MP3/入口の前には車をとめないでください。.mp3", translation: "请不要在入口停车。"},
-  { name: "MP3/わたしはテニスのルールをよくしりません.mp3", translation: "我熟悉网球的规则。"},
-  { name: "MP3/もっとていねいにかいてください。.mp3", translation: "请更加仔细地写。"}
-];
-
-function playAudio(index) {
-  const audioPlayer = new Audio(audioFiles[index].name);
-  audioPlayer.play();
-  document.getElementById('japaneseText').textContent = audioFiles[index].name;
+async function fetchAudioFiles() {
+  try {
+    const response = await fetch('MP3/');
+    const files = await response.json();
+    return files;
+  } catch (error) {
+    console.error('获取文件列表失败', error);
+    return [];
+  }
 }
 
-function createAudioButtons() {
-  const audioList = document.getElementById('audioList');
+async function playAudio(filename) {
+  const audioPlayer = new Audio(filename);
+  audioPlayer.play();
+  document.getElementById('japaneseText').textContent = filename;
+}
 
-  audioFiles.forEach((file, index) => {
+async function createAudioButtons() {
+  const audioList = document.getElementById('audioList');
+  const audioFiles = await fetchAudioFiles();
+
+  audioFiles.forEach((filename, index) => {
     const button = document.createElement('button');
-    button.textContent = file.translation;
+    button.textContent = `音频 ${index + 1}`;
     button.onclick = function() {
-      playAudio(index);
+      playAudio(`MP3/${filename}`);
     };
 
     audioList.appendChild(button);
